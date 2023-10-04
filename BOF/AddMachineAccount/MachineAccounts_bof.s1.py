@@ -6,7 +6,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class AddMachineAccountBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("AddMachineAccount")
+        super().__init__("add_machine_account", base_binary_name="AddMachineAccount")
 
         self.parser.description = (
             "Add a computer account to the Active Directory domain."
@@ -37,7 +37,7 @@ class AddMachineAccountBOF(BaseBOFTask):
 
 class DelMachineAccountBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("DelMachineAccount")
+        super().__init__("del_machine_account", base_binary_name="DelMachineAccount")
 
         self.parser.description = (
             "Remove a computer account from the Active Directory domain."
@@ -56,7 +56,7 @@ class DelMachineAccountBOF(BaseBOFTask):
 
 class GetMachineAccountQuota(BaseBOFTask):
     def __init__(self):
-        super().__init__("GetMachineAccountQuota")
+        super().__init__("get_machine_account_quota", base_binary_name="GetMachineAccountQuota")
 
         self.parser.description = (
             "Read the MachineAccountQuota value from the Active Directory domain."

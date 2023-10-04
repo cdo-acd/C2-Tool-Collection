@@ -6,7 +6,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class KerbHashBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("KerbHash")
+        super().__init__("kerbhash", base_binary_name="KerbHash")
 
         self.parser.description = "Hash passwords to kerberos keys."
         self.parser.epilog = (

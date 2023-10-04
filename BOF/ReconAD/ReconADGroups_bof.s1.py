@@ -6,14 +6,14 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class ReconADGroupsBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("ReconAD-Groups", base_binary_name="ReconAD")
+        super().__init__("reconad_groups", base_binary_name="ReconAD")
 
         self.parser.description = "Use ADSI to query Active Directory group objects and attributes."
         self.parser.epilog = (
             "Use Active Directory Service Interfaces (ADSI) to query group objects and corresponding attributes.\n"
             "Example usage:\n"
-            '  ReconAD-Groups "Domain Admins" --usegc\n'
-            "  ReconAD-Groups *server* --attributes displayName,sAMAccountName --count 10\n"
+            '  reconad_groups "Domain Admins" --usegc\n'
+            "  reconad_groups *server* --attributes displayName,sAMAccountName --count 10\n"
         )
 
         self.parser.add_argument("groupname", help="The group(s) to search for.")

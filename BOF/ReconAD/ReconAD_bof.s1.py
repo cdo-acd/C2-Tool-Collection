@@ -6,7 +6,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class ReconADBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("ReconAD")
+        super().__init__("reconad", base_binary_name="ReconAD")
 
         self.parser.description = "Use ADSI to query Active Directory objects and attributes."
         self.parser.epilog = (

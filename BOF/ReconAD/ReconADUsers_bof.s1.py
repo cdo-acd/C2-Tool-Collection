@@ -6,14 +6,14 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class ReconADUsersBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("ReconAD-Users", base_binary_name="ReconAD")
+        super().__init__("reconad_users", base_binary_name="ReconAD")
 
         self.parser.description = "Use ADSI to query Active Directory user objects and attributes."
         self.parser.epilog = (
             "Use Active Directory Service Interfaces (ADSI) to query user objects and corresponding attributes.\n"
             "Example usage:\n"
-            "  ReconAD-Users *admin* --attributes displayName,sAMAccountName --count 10\n"
-            "  ReconAD-Users serveradmin --usegc\n"
+            "  reconad_users *admin* --attributes displayName,sAMAccountName --count 10\n"
+            "  reconad_users serveradmin --usegc\n"
         )
 
         self.parser.add_argument("username", help="The user(s) to search for.")

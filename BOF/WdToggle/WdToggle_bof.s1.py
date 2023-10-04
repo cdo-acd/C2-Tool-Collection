@@ -7,5 +7,5 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class WdToggleBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("WdToggle", supported_architectures=[ImplantArch.INTEL_X64])
+        super().__init__("wdtoggle", supported_architectures=[ImplantArch.INTEL_X64], base_binary_name="WdToggle")
         self.parser.description = "Patch lsass to enable WDigest credential caching and to circumvent Credential Guard (if enabled)."

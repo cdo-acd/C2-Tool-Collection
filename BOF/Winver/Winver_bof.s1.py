@@ -6,5 +6,5 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class WinverBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("Winver")
+        super().__init__("winver", base_binary_name="Winver")
         self.parser.description = "Display the version of Windows that is running, the build number and patch release (Update Build Revision)."

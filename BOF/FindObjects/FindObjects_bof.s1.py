@@ -6,7 +6,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class FindProcHandleBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("FindProcHandle", base_binary_name="FindProcHandle")
+        super().__init__("find_proc_handle", base_binary_name="FindProcHandle")
 
         self.parser.add_argument("processname", help="The processhandle to search for.")
 
@@ -30,7 +30,7 @@ class FindProcHandleBOF(BaseBOFTask):
 
 class FindModuleBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("FindModule", base_binary_name="FindModule")
+        super().__init__("find_module", base_binary_name="FindModule")
 
         self.parser.add_argument("modulename", help="The module to search for.")
 

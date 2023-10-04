@@ -6,7 +6,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class SmbinfoBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("Smbinfo")
+        super().__init__("smbinfo", base_binary_name="Smbinfo")
 
         self.parser.description = (
             "Use NetWkstaGetInfo API to gather remote system version info."

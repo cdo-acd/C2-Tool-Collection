@@ -8,7 +8,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class AskCredsBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("Askcreds")
+        super().__init__("ask_creds", base_binary_name="Askcreds")
 
         self.parser.description = (
             "Collect passwords using CredUIPromptForWindowsCredentialsName."

@@ -6,5 +6,5 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class StartWebClientBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("StartWebClient")
+        super().__init__("start_web_client", base_binary_name="StartWebClient")
         self.parser.description = "Starting WebClient Service Programmatically."

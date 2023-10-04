@@ -6,7 +6,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class KerberoastBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("Kerberoast")
+        super().__init__("kerberoast", base_binary_name="Kerberoast")
 
         _action_choices = ["list", "list-no-aes", "roast", "roast-no-aes"]
 

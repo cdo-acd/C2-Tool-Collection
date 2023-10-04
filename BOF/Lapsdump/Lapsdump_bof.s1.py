@@ -6,7 +6,7 @@ from outflank_stage1.task.enums import BOFArgumentEncoding
 
 class LapsdumpBOF(BaseBOFTask):
     def __init__(self):
-        super().__init__("Lapsdump")
+        super().__init__("lapsdump", base_binary_name="Lapsdump")
 
         self.parser.description = (
             "Dump LAPS passwords from specified computers within Active Directory."

@@ -7,7 +7,7 @@ from outflank_stage1.task.exceptions import TaskInvalidArgumentsException
 
 class SprayAD(BaseBOFTask):
     def __init__(self):
-        super().__init__("SprayAD")
+        super().__init__("sprayad", base_binary_name="SprayAD")
 
         self.parser.add_argument("password", help="The password to spray.")
 
