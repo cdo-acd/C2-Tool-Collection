@@ -12,7 +12,7 @@ all: $(OBJS)
 	$(CC_x64) $(CFLAGS) -o ../$*.x64.o -c $<
 	$(STRIP_x64) --strip-unneeded ../$*.x64.o
 
-	$(CC_x86) $(CFLAGS) -o ../$*.x86.o -DWOW64 -fno-leading-underscore -c $<
+	$(CC_x86) $(CFLAGS) -o ../$*.x86.o -DWOW64 -c $<
 	$(STRIP_x86) --strip-unneeded ../$*.x86.o
 
 clean:
