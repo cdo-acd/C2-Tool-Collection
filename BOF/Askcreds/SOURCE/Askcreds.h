@@ -58,6 +58,9 @@ WINBASEAPI BOOL WINAPI KERNEL32$QueryFullProcessImageNameW(HANDLE hProcess, DWOR
 WINBASEAPI void __cdecl MSVCRT$memset(void *dest, int c, size_t count);
 WINBASEAPI int __cdecl MSVCRT$_wcsicmp(const wchar_t *_Str1, const wchar_t *_Str2);
 WINBASEAPI int __cdecl MSVCRT$_stricmp(const char *string1, const char *string2);
+DECLSPEC_IMPORT int __cdecl MSVCRT$iswspace(wint_t _C);
+DECLSPEC_IMPORT void* __cdecl MSVCRT$malloc(size_t _Size);
+WINBASEAPI void __cdecl MSVCRT$free(void *memblock);
 
 //USER32
 WINUSERAPI WINBOOL USER32$EnumWindows(WNDENUMPROC lpEnumFunc,LPARAM lParam);

