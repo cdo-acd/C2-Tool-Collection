@@ -1,19 +1,19 @@
 #author Cornelis de Plaa
 #@outflank.nl
 
-beacon_command_register("GetMachineAccountQuota", "Read the MachineAccountQuota value from the Active Directory domain.",
+beacon_command_register("get_machine_account_quota", "Read the MachineAccountQuota value from the Active Directory domain.",
     "Synopsis: GetMachineAccountQuota\n\n" .
     "Use Active Directory Service Interfaces (ADSI) to read the ms-DS-MachineAccountQuota value from AD.\n");
 
-beacon_command_register("AddMachineAccount", "Add a computer account to the Active Directory domain.",
+beacon_command_register("add_machine_account", "Add a computer account to the Active Directory domain.",
     "Synopsis: AddMachineAccount [Computername] [Password <Optional>]\n\n" .
     "Use Active Directory Service Interfaces (ADSI) to add a computer account to AD.\n");
 
-beacon_command_register("DelMachineAccount", "Remove a computer account from the Active Directory domain.",
+beacon_command_register("del_machine_account", "Remove a computer account from the Active Directory domain.",
     "Synopsis: DelMachineAccount [Computername]\n\n" .
     "Use Active Directory Service Interfaces (ADSI) to delete a computer account from AD.\n");
 
-alias GetMachineAccountQuota {
+alias get_machine_account_quota {
     $bid = $1;
 
     # Read in the right BOF file
@@ -24,7 +24,7 @@ alias GetMachineAccountQuota {
     beacon_inline_execute($bid, $data, "go", $null);
 }
 
-alias AddMachineAccount {
+alias add_machine_account {
     $bid = $1;
 
     $input = substr($0, 18);
@@ -54,7 +54,7 @@ alias AddMachineAccount {
     beacon_inline_execute($bid, $data, "go", $arg_data);
 }
 
-alias DelMachineAccount {
+alias del_machine_account {
     $bid = $1;
 
     $input = substr($0, 18);
